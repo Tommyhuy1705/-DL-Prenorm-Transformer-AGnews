@@ -103,6 +103,8 @@ def train_loop(
     tokenizer_name: str = "distilbert-base-uncased",
     train_subset: int = None,
     test_subset: int = None,
+    early_stop_patience: int = None,
+    early_stop_min_delta: float = 0.0,
 ) -> str:
     """Vòng huấn luyện mức cao; trả về đường dẫn checkpoint.
 
@@ -130,11 +132,32 @@ def train_loop(
     os.makedirs(save_dir, exist_ok=True)
     os.makedirs(log_dir, exist_ok=True)
     history_rows = []
+    best_acc = float("-inf")
+    best_state = None
+    best_epoch = 0
+    patience_counter = 0
+
     for epoch in range(1, epochs + 1):
         loss = train_epoch(model, train_loader, criterion, optimizer, device)
         acc, _, _ = evaluate_model(model, test_loader, device)
         history_rows.append({"epoch": epoch, "train_loss": loss, "val_acc": acc})
         print(f"Epoch {epoch} | Loss: {loss:.4f} | Độ chính xác (val): {acc:.4f}")
+
+        if acc > best_acc + early_stop_min_delta:
+            best_acc = acc
+            best_epoch = epoch
+            best_state = {k: v.detach().cpu().clone() for k, v in model.state_dict().items()}
+            patience_counter = 0
+        elif early_stop_patience is not None:
+            patience_counter += 1
+            if patience_counter >= early_stop_patience:
+                print(
+                    f"Early stopping tại epoch {epoch} (best val acc = {best_acc:.4f} ở epoch {best_epoch})."
+                )
+                break
+
+    if best_state is not None:
+        model.load_state_dict(best_state)
 
     ts = int(time.time())
     ckpt_path = os.path.join(save_dir, f"{model_type}_{ts}.pt")
@@ -164,6 +187,8 @@ def parse_args():
     parser.add_argument("--tokenizer-name", type=str, default="distilbert-base-uncased")
     parser.add_argument("--train-subset", type=int, default=None)
     parser.add_argument("--test-subset", type=int, default=None)
+    parser.add_argument("--early-stop-patience", type=int, default=None)
+    parser.add_argument("--early-stop-min-delta", type=float, default=0.0)
     return parser.parse_args()
 
 
@@ -182,4 +207,6 @@ if __name__ == "__main__":
         tokenizer_name=args.tokenizer_name,
         train_subset=args.train_subset,
         test_subset=args.test_subset,
+        early_stop_patience=args.early_stop_patience,
+        early_stop_min_delta=args.early_stop_min_delta,
     )
