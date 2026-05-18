@@ -5,16 +5,16 @@
 
 | Name | Student ID | Role |
 |------|------------|------|
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-| Dương Quang Đông | 31231020389 | Báo cáo: 3.3 |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
-|  |  |  |
+| Trần Viết Gia Huy | 31231027056 |  |
+| Nguyễn Minh Nhựt | 31231022656 |  |
+| Nguyễn Trọng Hưởng | 31231023691 |  |
+| Nguyễn Quốc Khánh | 31231021198 |  |
+| Ngô Chánh Phong | 31231021197 |  |
+| Tô Xuân Đông | 31231025345 |  |
+| Dương Quang Đông | 31231020389 |  |
+| Nguyễn Đình Lương | 31231027411 |  |
+| Võ Nguyên Bảo | 31231021638  |  |
+| Trần Thành Đạt | 31231021353  |  |
 
 ## Tổng quan dự án
 
@@ -88,7 +88,3 @@ File kết quả được lưu tại:
 
 - `results/comparison_results.csv`
 - `results/confusion_matrices.json`
-
-## Ghi chú
-- Đây là khung mã nguồn sạch, mô-đun để thực hiện thí nghiệm.
-- Nên mở rộng với logging, scheduler, mixed precision và tìm kiếm siêu tham số cho báo cáo cuối cùng.
