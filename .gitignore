@@ -73,6 +73,11 @@ checkpoints/
 
 # Logs
 logs/
+notebooks/logs/
+
+# Results
+results/
+notebooks/results/
 
 # Ignore envs
 .env
