@@ -1,9 +1,9 @@
 from typing import List, Tuple, Optional
+import csv
+import os
 
 import torch
 from torch.utils.data import Dataset, DataLoader
-
-from datasets import load_dataset
 try:
     from transformers import AutoTokenizer
 except Exception:
@@ -69,9 +69,19 @@ def build_simple_vocab(texts: List[str], max_size: int = 20000) -> dict:
 
 
 def load_ag_news(split: str = "train") -> Tuple[List[str], List[int]]:
-    ds = load_dataset("ag_news", split=split)
-    texts = [" ".join(x["text"].split()) for x in ds]
-    labels = [int(x["label"]) for x in ds]
+    dataset_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "datasets"))
+    csv_path = os.path.join(dataset_dir, f"{split}.csv")
+
+    texts: List[str] = []
+    labels: List[int] = []
+    with open(csv_path, "r", encoding="utf-8", newline="") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            title = (row.get("Title") or "").strip()
+            description = (row.get("Description") or "").strip()
+            text = " ".join(part for part in [title, description] if part)
+            texts.append(" ".join(text.split()))
+            labels.append(int(row["Class Index"]) - 1)
     return texts, labels
 
 
