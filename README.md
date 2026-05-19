@@ -3,8 +3,8 @@
 **Nhóm: 2**
 ## Thành viên nhóm
 
-| Name | Student ID | Role |
-|------|------------|------|
+| Name | Student ID | 
+|------|------------|
 | Trần Viết Gia Huy | 31231027056 |
 | Nguyễn Minh Nhựt | 31231022656 |
 | Nguyễn Trọng Hưởng | 31231023691 |
